@@ -41,4 +41,25 @@ final class HomeViewModel: ObservableObject {
             self.error = error.localizedDescription
         }
     }
+    
+    func delete(noteID: String) async -> String {
+        let service = NotesService()
+        let message: String
+        do {
+            if let response = try await service.delete(noteID: noteID) {
+                message = response
+            }
+            else {
+                message = "Note Deleted"
+            }
+            if let index = self.notes.firstIndex(where: { $0.id == noteID }) {
+                self.notes.remove(at: index)
+            }
+        }
+        catch {
+            print(#function, error)
+            message = "Error Deleting Note, Reason: \(error.localizedDescription)"
+        }
+        return message
+    }
 }

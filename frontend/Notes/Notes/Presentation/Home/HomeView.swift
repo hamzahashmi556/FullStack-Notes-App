@@ -13,6 +13,12 @@ struct HomeView: View {
     
     @State private var path = NavigationPath()
     
+    @State private var showAlert = false
+    
+    @State private var message = ""
+    
+    @State private var selectedNoteId: String? = nil
+    
     var body: some View {
         NavigationStack(path: $path) {
             ZStack {
@@ -33,6 +39,13 @@ struct HomeView: View {
                 else {
                     List(homeVM.notes) { note in
                         Text(note.note)
+                            .contextMenu {
+                                Button("Delete", role: .destructive) {
+                                    selectedNoteId = note.id
+                                    showAlert = true
+                                    message = "Confirm Delete note?"
+                                }
+                            }
                     }
                     .refreshable {
                         await homeVM.fetchNotes()
@@ -57,6 +70,21 @@ struct HomeView: View {
         }
         .task {
             await homeVM.fetchNotes()
+        }
+        .alert("Alert", isPresented: $showAlert, actions: {
+            if let selectedNoteId {
+                Button("Delete", role: .destructive) {
+                    delete(noteId: selectedNoteId)
+                }
+            }
+        }, message: {
+            Text(message)
+        })
+    }
+    
+    func delete(noteId: String) {
+        Task {
+            _ = await homeVM.delete(noteID: noteId)
         }
     }
 }

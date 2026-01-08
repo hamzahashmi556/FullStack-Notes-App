@@ -13,6 +13,7 @@ final class NotesService {
 
     enum Endpoints: String {
         case notes = "/notes"
+        case delete = "/notes/:id"
     }
     
     func createNote(note: String) async throws {
@@ -53,5 +54,18 @@ final class NotesService {
         let decoder = JSONDecoder()
         let notes = try decoder.decode([Note].self, from: data)
         return notes
+    }
+    
+    func delete(noteID: String) async throws -> String? {
+        let endPoint = Endpoints.notes.rawValue
+        let urlString = baseURL + endPoint + "/\(noteID)"
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let message = String(data: data, encoding: .utf8)
+        return message
     }
 }
