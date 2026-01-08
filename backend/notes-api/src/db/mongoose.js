@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb://127.0.0.1:27017/notes-api', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: true
-})
+mongoose.connect('mongodb://127.0.0.1:27017/notes-api')
+.then(() => {
+    console.log('App connected to database');
+}) 
+.catch((error) => {
+    console.log("Mongoose Error " + error.message);
+  });
