@@ -38,14 +38,19 @@ struct HomeView: View {
                 }
                 else {
                     List(homeVM.notes) { note in
-                        Text(note.note)
-                            .contextMenu {
-                                Button("Delete", role: .destructive) {
-                                    selectedNoteId = note.id
-                                    showAlert = true
-                                    message = "Confirm Delete note?"
-                                }
+                        
+                        Button {
+                            path.append(NavigationDestinations.noteForm(note: note, noteAdded: refresh))
+                        } label: {
+                            Text(note.note)
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                            Button("Delete", role: .destructive) {
+                                selectedNoteId = note.id
+                                showAlert = true
+                                message = "Confirm Delete note?"
                             }
+                        })
                     }
                     .refreshable {
                         await homeVM.fetchNotes()
@@ -59,11 +64,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add") {
-                        path.append(NavigationDestinations.addNote({
-                            Task {
-                                await homeVM.fetchNotes()
-                            }
-                        }))
+                        path.append(NavigationDestinations.noteForm(note: nil, noteAdded: refresh))
                     }
                 }
             }
@@ -80,6 +81,12 @@ struct HomeView: View {
         }, message: {
             Text(message)
         })
+    }
+    
+    func refresh() {
+        Task {
+            await homeVM.fetchNotes()
+        }
     }
     
     func delete(noteId: String) {

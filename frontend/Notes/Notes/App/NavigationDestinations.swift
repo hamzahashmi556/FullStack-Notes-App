@@ -16,8 +16,8 @@ enum NavigationDestinations: Hashable, Equatable {
     
     var id: String {
         switch self {
-        case .addNote(_):
-            return "addNote"
+        case .noteForm(note: _, noteAdded: _):
+            return "noteForm"
         }
     }
     
@@ -25,12 +25,12 @@ enum NavigationDestinations: Hashable, Equatable {
         hasher.combine(id)
     }
     
-    case addNote(() -> Void)
+    case noteForm(note: Note?, noteAdded: () -> Void)
     
     var scene: some View {
         switch self {
-        case .addNote(let addedNote):
-            AddNoteView(addedNote: addedNote)
+        case .noteForm(note: let note, noteAdded: let noteAdded):
+            NoteFormView(note: note, addedNote: noteAdded)
         }
     }
 }

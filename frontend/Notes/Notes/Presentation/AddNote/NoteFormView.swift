@@ -7,15 +7,20 @@
 
 import SwiftUI
 
-struct AddNoteView: View {
+struct NoteFormView: View {
     
-    @StateObject private var vm = AddNoteViewModel()
+    @StateObject private var vm: NoteFormViewModel
     
     @FocusState private var isFocused: Bool
     
     @Environment(\.dismiss) private var dismiss
     
     let addedNote: () -> Void
+    
+    init(note: Note?, addedNote: @escaping () -> Void) {
+        self._vm = StateObject(wrappedValue: NoteFormViewModel(note: note))
+        self.addedNote = addedNote
+    }
     
     var body: some View {
         VStack {
@@ -38,7 +43,7 @@ struct AddNoteView: View {
                     ProgressView()
                 }
                 else {
-                    Text("Add")
+                    Text(vm.selectedNoteId == nil ? "Add" : "Update")
                 }
             }
             .buttonStyle(.bordered)
