@@ -20,7 +20,7 @@ app.post('/notes', async (req, res) => {
         await note.save()
         res.status(201).send(note)
     }
-    catch(error) {
+    catch (error) {
         console.log(err)
         res.status(400).send(err)
     }
@@ -28,11 +28,17 @@ app.post('/notes', async (req, res) => {
 
 // READ
 app.get('/notes', async (req, res) => {
+    // fs.readFile(__dirname + '/' + 'notes.json', 'utf-8', (err, data) => {
+    //     if (err) {
+    //         return console.log(err)
+    //     }
+    //     res.status(200).send(data)
+    // })
     try {
         const notes = await Note.find()
         res.send(notes)
     }
-    catch(err) {
+    catch (err) {
         console.log(err)
         res.status(500).send(err)
     }
@@ -51,7 +57,7 @@ app.patch('/notes/:id', async (req, res) => {
         res.status(200).send(note)
     }
     catch (error) {
-        res.status(404).send(err)
+        res.status(404).send(error)
     }
 })
 
@@ -64,7 +70,7 @@ app.delete('/notes/:id', async (req, res) => {
         }
         res.status(200).send("The note has been successfully delete BC!!!")
     }
-    catch(error) {
+    catch (error) {
         console.log(error)
         res.status(404).send(error)
     }
