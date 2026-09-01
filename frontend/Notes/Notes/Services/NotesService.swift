@@ -9,7 +9,9 @@ import Foundation
 
 final class NotesService {
     
-    let baseURL = "http://192.168.18.254:3000/notes"
+//    let baseURL = "http://192.168.18.254:3000/notes"
+    let baseURL = "http://192.168.18.23:3000/notes"
+//    let baseURL = "localhost:3000/notes"
     
     enum HTTPMethod: String {
         case GET, POST, PATCH, DELETE
